@@ -169,6 +169,10 @@ module.exports = function(sequelize, DataTypes) {
     geom: {
       type: DataTypes.GEOMETRY('MULTIPOLYGON'),
       allowNull: false
+    },
+    www_picture: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     timestamps: false,

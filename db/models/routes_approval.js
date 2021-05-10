@@ -153,6 +153,10 @@ module.exports = function(sequelize, DataTypes) {
     geom: {
       type: DataTypes.GEOMETRY('MULTILINESTRING'),
       allowNull: false
+    },
+    www_picture: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   },
   {
