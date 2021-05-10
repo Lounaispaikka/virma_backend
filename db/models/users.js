@@ -21,6 +21,9 @@ module.exports = function(sequelize, Sequelize) {
         isEmail: true
       }
     },
+    phone: {
+      type: Sequelize.STRING
+    },
     admin: Sequelize.BOOLEAN,
     organization: Sequelize.STRING,
     updater_id: Sequelize.STRING,
