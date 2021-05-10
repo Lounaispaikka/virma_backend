@@ -75,6 +75,7 @@ module.exports = function(passport, users) {
               username: username,
               password: hashPass,
               email: req.body.email,
+              phone: req.body.phone,
               organization: req.body.organization,
               updater_id: username.replace(/ /g,'') // Just to be sure...
             });

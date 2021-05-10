@@ -17,8 +17,19 @@ const port = 8081;
 
 app.use(helmet());
 
+
+const whitelist = [config.directUrl, 'https://127.0.0.1','http://127.0.0.1','http://127.0.0.1:8080', 'https://[::1]', 'https://localhost', 'http://localhost:8080','http://[::1]:8080'];
+
+  
 app.use(cors({
-  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : config.directUrl,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      console.log(origin);
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   methods: ['GET', 'POST'],
   allowHeaders: ['Origin, Content-Type, Accept, Authorization, Cache'],
   exposedHeaders: ['X-Requested-With'],
@@ -38,7 +49,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 // Session handling
 app.use(session({
   secret: config.sessionSecret,
-  cookie: { maxAge: 3600000 }, // 1 hour cookie
+  cookie: { maxAge: 3600000, sameSite: process.env.NODE_ENV === 'development'? "none":"lax" }, // 1 hour cookie
   resave: false,
   saveUninitialized: true
 }));

@@ -8,6 +8,7 @@ function createLog(operation, model, name = undefined, user = undefined, message
     target_name: name ? name : undefined,
     target_table: model.getTableName(),
     timestamp: new Date,
+    msg: message+'',
     executor: user ? user : undefined
   }
   console.error("ERROR",operation,name,model.getTableName(),message);

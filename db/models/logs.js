@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false
     },
+	msg: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     executor: DataTypes.STRING,
   },
   {
