@@ -25,9 +25,11 @@ app.use(cors({
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
-    } else {
+    } else if (origin) {
       console.log(origin);
       callback(new Error('Not allowed by CORS'))
+    } else {
+      callback(null, true)
     }
   },
   methods: ['GET', 'POST'],

@@ -178,11 +178,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    hidden: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     geom: {
       type: DataTypes.GEOMETRY('POINT'),
       allowNull: false
     },
     www_picture: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    picture: {
       type: DataTypes.STRING,
       allowNull: true
     }
