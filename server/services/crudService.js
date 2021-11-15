@@ -95,7 +95,7 @@ function paramsModifyHook(res, model, params, user) {
 exports.createFeature = function (res, model, params, user) {
 	paramsModifyHook(res, model, params, user).then(() => {
 
-		model.create(res, model, params, user).then(response => {
+		model.create(params).then(response => {
 			createLog('CREATE', model, params.name_fi, user);
 			res.json({ 'message': response });
 		}).catch(error => {
