@@ -56,6 +56,8 @@ function getPointsByClass1(req, res, next) {
 
 function getUserFeatures(req, res, next) {
   let whereClause = {};
+
+  //TODO: SECURITY: updater_id "asd" would match "asdqwe". Normalize database!
   if (!req.body.isAdmin) { whereClause = { where: { updater_id: { [Op.like]: '%' + req.body.updater_id + '%' } } } }
 
   Model.points.findAll(whereClause).then(result => {
