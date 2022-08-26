@@ -15,16 +15,14 @@ function createLog(operation, model, name = undefined, user = undefined, message
 		executor: user ? user : undefined
 	}
 	console.log("[CRUD] ", operation, name, model.getTableName(), message);
-	Model.logs.create(params);
+	return Model.logs.create(params);
 }
-function streamToString (stream) {
-	const chunks = [];
-	return new Promise((resolve, reject) => {
-	  stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-	  stream.on('error', (err) => reject(err));
-	  stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-	})
-  }
+
+function flipGeom(params) {
+	//if (params["geom"]) {
+		
+	//}
+}
   
 function paramsModifyHook(res, model, params, user) {
 
@@ -49,31 +47,32 @@ function paramsModifyHook(res, model, params, user) {
 		// some absolute path that we don't own, let's modify it
 		if (absolute && !ourURL) {
 			console.log("Converting absolute url:", absolute.href);
-			console.log(params);
-			console.log(model);
+			console.log("Params:",params);
+			console.log("Model:",model);
 			
 			// get the file
 			axios({
 				url: absolute.href,
 				method: 'GET',       
 				maxContentLength: 30000000,
-				maxBodyLength: 300000000,
+				maxBodyLength: 30000000,
 				responseType: 'stream', 
 			}).then((response) => {
-				params.www_picture = "https://via.placeholder.com/300x200.jpg?text=override";
+				params.www_picture = "https://virma.lounaistieto.fi/images/pic_overriding.jpg";
 
 				const key = params.gid+"-"+Math.floor(+new Date())+".jpg";
 				
   				//streamToString(response.data).then((image)=>{
 				const image = response.data;
 				console.log("image type",typeof image);
-				imageService.uploadS3(key, image).then((data)=> {
+				imageService.uploadS3(key, image, user.username).then((data)=> {
 					
 					console.log("overwrote",params.www_picture);
 					params.www_picture = data.Location;
 
 					return resolve(true);
 				}).catch((error)=>{
+					console.error("axios fail?",error);
 					reject(error);
 					res.json({ 'message': error });
 				});
@@ -85,7 +84,7 @@ function paramsModifyHook(res, model, params, user) {
 			return resolve(params.www_picture);
 		} else {
 			console.log("discarding", params.www_picture);
-			params.www_picture = "https://via.placeholder.com/300x200.jpg?text=invalid%20URL";
+			params.www_picture = "https://virma.lounaistieto.fi/images/invalidurl.png";
 			return resolve(params.www_picture);
 		}
 	});
@@ -93,12 +92,14 @@ function paramsModifyHook(res, model, params, user) {
 }
 
 exports.createFeature = function (res, model, params, user) {
+	flipGeom(params);
 	paramsModifyHook(res, model, params, user).then(() => {
 
 		model.create(params).then(response => {
 			createLog('CREATE', model, params.name_fi, user);
 			res.json({ 'message': response });
-		}).catch(error => {
+		}).catch(e => {
+			const error = e+"";
 			createLog('CREATE_ERROR', model, undefined, undefined, error);
 			res.status(500).json({ 'message': error });
 		});
@@ -107,13 +108,15 @@ exports.createFeature = function (res, model, params, user) {
 }
 
 exports.updateFeature = function (res, model, id, params, user) {
+	flipGeom(params);
 	paramsModifyHook(res, model, params, user).then(() => {
 
 		model.update(params, { where: { gid: id } }).then(response => {
-			paramsModifyHook(res, model, params, user);
+			// paramsModifyHook(res, model, params, user); // UNDONE: no longer modifiable
 			createLog('UPDATE', model, params.name_fi, user);
 			res.json({ 'message': response });
-		}).catch(error => {
+		}).catch(e => {		
+			const error = e+"";
 			createLog('UPDATE_ERROR', model, undefined, undefined, error);
 			res.status(500).json({ 'message': error });
 		});
@@ -124,7 +127,8 @@ exports.deleteFeature = function (res, model, id, name, user) {
 	model.destroy({ where: { gid: id } }).then(response => {
 		createLog('DELETE', model, name, user);
 		res.json({ 'message': response });
-	}).catch(error => {
+	}).catch(e => {
+		const error = e+"";
 		createLog('DELETE_ERROR', model, undefined, undefined, error);
 		res.status(500).json({ 'message': error });
 	});

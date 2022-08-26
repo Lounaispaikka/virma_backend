@@ -24,6 +24,21 @@ function sendMailNewUser(info) {
   }
 }
 
+function sendAccessRequestNotification(info) {
+  fs.readFile(__dirname + '/../../emailTemplates/newAccessRequest.html', 'utf-8', (error, emailTemplate) => {
+    if (error) { throw error; }
+    const templateData = { user: info.user };
+    const template = Handlebars.compile(emailTemplate);
+    const htmlBody = template(templateData);
+    const subject = '[Virma] Uusia oikeuspyyntöjä';
+
+    Model.users.findAll({ where: { admin: true } })
+      .then(result => {
+        result.forEach(user => { sendMail(user.email, subject, htmlBody); });
+      });
+  });
+}
+
 function sendMailForgotPassword(url, userEmail) {
   fs.readFile(__dirname + '/../../emailTemplates/passwordForgot.html', 'utf-8', (error, emailTemplate) => {
     if (error) { throw error; }
@@ -60,7 +75,7 @@ function sendMail(to, subject, html) {
 
   transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
-      console.log(error);
+      console.error("sendMail failed",error);
     } else {
       console.log('Email sent');
     }
@@ -70,5 +85,6 @@ function sendMail(to, subject, html) {
 module.exports = {
   sendMailForgotPassword: sendMailForgotPassword,
   sendMailNewUser: sendMailNewUser,
-  sendMailPasswordChanged: sendMailPasswordChanged
+  sendMailPasswordChanged: sendMailPasswordChanged,
+  sendAccessRequestNotification: sendAccessRequestNotification
 };

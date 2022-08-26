@@ -26,7 +26,7 @@ app.use(cors({
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else if (origin) {
-      console.log(origin);
+      console.log("Origin fail:",origin);
       callback(new Error('Not allowed by CORS'))
     } else {
       callback(null, true)
