@@ -95,7 +95,7 @@ function api_requestFeatureAccess(req, res, next) {
 		}, {}).then(response => {
 			res.json({ 'message': response });
 			
-			Model.access_requests.count().then(count => {
+			Model.access_requests.count({ where: { username: req.user.username} }).then(count => {
 				if (count!=1) return;
 				sendMailService.sendAccessRequestNotification({user: req.user});
 			});
