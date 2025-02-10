@@ -134,6 +134,12 @@ ALTER TABLE ONLY public.points ADD CONSTRAINT points_copy_pkey PRIMARY KEY (gid)
 CREATE INDEX points_geom_idx ON public.points USING gist (geom);
 ```
 
+##### Point example from virma.fi:
+|gid|geom|id|class1_fi|class1_se|class1_en|class2_fi|class2_se|class2_en|name_fi|name_se|name_en|municipali|subregion|region|info_fi|info_se|info_en|chall_clas|length_m|accessibil|www_fi|www_se|www_en|email|telephone|upkeeper|upkeepinfo|upkeepclas|shapeestim|sh_es_date|sh_es_pers|timestamp|updater_id|special|munici_nro|subreg_nro|region_nro|publicinfo|picture|www_picture|hidden|datasource|ski_route|
+|---|----|--|---------|---------|---------|---------|---------|---------|-------|-------|-------|----------|---------|------|-------|-------|-------|----------|--------|----------|------|------|------|-----|---------|--------|----------|----------|----------|----------|----------|---------|----------|-------|----------|----------|----------|----------|-------|-----------|------|----------|---------|
+|103|MULTILINESTRING ((...))|103|Virkistysreitti|Rekreationsrutt|Recreational route|Retkeilyreitti|Vandringsled|Hiking trail|Kirjaisten Gloetin reitti|Gloets vandringsrutt i Kirjais|Gloet hiking trail in Kirjais|Parainen|Turunmaa|Varsinais-Suomi|Reitin pituus 4 km. Matkan varrella näk..|Ruttens län...|Length of the trail...|Vaativa, paljon korkeuseroja|4600||https://retkipaikka.fi/nauvon-saaristossa-kevatta-etsimassa/|||||ei tietoa ylläpitäjästä||ei tietoa ylläpitoluokasta||||2022-08-15|XX||445|21|02|F|picture author|https://placehold.co/600x400/EEE/31343C.jpg|false|notknown|false|
+
+
 #### routes & routes_approval (routes_approval is identical with different table name)
 ```
 CREATE SEQUENCE public.routes_gid_seq;
@@ -184,6 +190,11 @@ ALTER TABLE public.routes OWNER TO postgres;
 ALTER TABLE ONLY public.routes ADD CONSTRAINT routes_copy_pkey PRIMARY KEY (gid);
 CREATE INDEX routes_geom_idx ON public.routes USING gist (geom);
 ```
+
+##### Route example from virma.fi:
+|id|geom|fid|gid|class1_fi|class1_se|class1_en|class2_fi|class2_se|class2_en|name_fi|name_se|name_en|address|municipali|subregion|region|info_fi|info_se|info_en|chall_clas|accessibil|equipment|www_fi|www_se|www_en|telephone|email|ownerclass|owner|upkeeper|upkeepinfo|upkeepclas|shapeestim|sh_es_date|sh_es_pers|updater_id|x_eureffin|y_eureffin|timestamp|zip|munici_nro|subreg_nro|region_nro|special|no_address|publicinfo|picture|www_picture|hidden|datasource|
+|--|----|---|---|---------|---------|---------|---------|---------|---------|-------|-------|-------|-------|----------|---------|------|-------|-------|-------|----------|----------|---------|------|------|------|---------|-----|----------|-----|--------|----------|----------|----------|----------|----------|----------|----------|----------|---------|---|----------|----------|----------|-------|----------|----------|-------|-----------|------|----------|
+|1150|POINT (246289.5 6711694.571699469)|1177|1150|Virkistyskohde|rekreationsobjekt|recreational attraction|Luonto- tai lintutorni|natur- eller fågeltorn|nature or bird watching tower|Järvelän näköala- ja lintutorni|||Järveläntie|Lieto|Turku|Varsinais-Suomi|Kesällä 2013 valmistunut Järvelän näkö..||||||https://lieto.fi/palvelut-ja-asiointi/liikunta/ulkoilualueet-ja-ulkoilureitit/lintutorni/|||||Kunta|Liedon kunta|||satunnainen||2021-10-27||authornam|246289.5|6711694.57169947|2022-08-11||423|023|02||F|F|picture author|https://placehold.co/600x400/EEE/31343C.jpg|false|notknown|
 
 #### areas & areas_approval (areas_approval is identical with different table name)
 ```
